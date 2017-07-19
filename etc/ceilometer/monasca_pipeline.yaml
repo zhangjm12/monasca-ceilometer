@@ -3,12 +3,11 @@ sources:
     - name: meter_source
       interval: 60
       meters:
-          - "testbatch"
-          - "testbatch2"
+          - "*"
       sinks:
           - meter_sink
 sinks:
     - name: meter_sink
       transformers:
       publishers:
-          - monasca://http://192.168.10.6:8070/v2.0
+          - monasca://http://172.31.0.44:8070/v2.0

@@ -71,8 +71,10 @@ class Client(object):
     _ksclient = None
 
     def __init__(self, parsed_url):
-        self._retry_interval = cfg.CONF.database.retry_interval * 1000
-        self._max_retries = cfg.CONF.database.max_retries or 1
+        #self._retry_interval = cfg.CONF.database.retry_interval * 1000
+        #self._max_retries = cfg.CONF.database.max_retries or 1
+        self._retry_interval = 30000
+        self._max_retries = 3
         # enable monasca api pagination
         self._enable_api_pagination = cfg.CONF.monasca.enable_api_pagination
         # NOTE(zqfan): There are many concurrency requests while using
@@ -93,11 +95,11 @@ class Client(object):
             project_id = conf.os_tenant_id
             project_name = conf.os_tenant_name
         else:
-            username = conf.username
-            password = conf.password
-            auth_url = conf.auth_url
-            project_id = conf.project_id
-            project_name = conf.project_name
+            username = 'mini-mon'
+            password = 'password'
+            auth_url = 'http://172.31.0.44:35357/v3'
+            # project_id = conf.project_id
+            project_name = 'mini-mon'
         if not username or not password or not auth_url:
             err_msg = _("No user name or password or auth_url "
                         "found in service_credentials")
@@ -107,12 +109,11 @@ class Client(object):
         kwargs = {
             'username': username,
             'password': password,
-            'auth_url': auth_url.replace("v2.0", "v3"),
-            'project_id': project_id,
+            'auth_url': auth_url,
             'project_name': project_name,
             'region_name': conf.region_name,
-            'read_timeout': cfg.CONF.http_timeout,
-            'write_timeout': cfg.CONF.http_timeout,
+            'read_timeout': 6000,
+            'write_timeout': 6000,
         }
 
         self._kwargs = kwargs
